@@ -3,6 +3,7 @@ import morgan from 'morgan';
 import cors from 'cors';
 import { conectarDB } from './src/config/db.js';
 import 'dotenv/config';
+import authRoutes from './src/routes/auth.routes.js'
 import proveedoresRoutes from './src/routes/proveedores.routes.js';
 import productosRoutes from './src/routes/productos.routes.js';
 
@@ -15,6 +16,7 @@ app.use(express.json());
 
 const PORT = process.env.PORT || 3000;
 
+app.use('/api/login', authRoutes)
 app.use('/api/proveedores', proveedoresRoutes);
 app.use('/api/productos', productosRoutes);
 

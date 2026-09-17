@@ -21,18 +21,13 @@ const usuarioSchema = new mongoose.Schema({
     timestamps: true
 });
 
-usuarioSchema.pre('save', async function(next) {
+usuarioSchema.pre('save', async function() {
 
-    if (!this.isModified('password')) return next()
+    if (!this.isModified('password')) return;
 
-    try {
-        const salt = await bcrypt.genSalt(10);
+    const salt = await bcrypt.genSalt(10);
 
-        this.password = await bcrypt.hash(this.password, salt);
-        next();
-    } catch (error) {
-        next(error);
-    }
+    this.password = await bcrypt.hash(this.password, salt);
 });
 
 usuarioSchema.methods.compararPassword = async function(passwordIgresado) {
