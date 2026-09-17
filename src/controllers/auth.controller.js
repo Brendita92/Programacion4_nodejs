@@ -12,34 +12,34 @@ export const registrarUsuario = async (req, res) => {
 };
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-export const registrarUsuario1 = async (req, res) => {
+export const login = async (req, res) => {
     try {
+        const { email, password } = req.body;
+        
+        const usuario = await Usuario.findOne({ email });
 
-    } catch (error) {
+        if (!usuario) {
+            return res.status(401).json({ mensaje: "Credenciales invalidas" });
+        }
 
-    }
-};
+        const passwordCorrecto = await usuario.compararPassword(password);
 
-export const registrarUsuario2 = async (req, res) => {
-    try {
+        if (!passwordCorrecto) {
+            return res.status(401).json({ mensaje: "Credenciales invalidas" });
+        }
+        const payload = {
+            id: usuario._id,
+            rol: usuario.rol
+        };
 
-    } catch (error) {
+        const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRATION });
+        res.status(200).json({ 
+            mensaje: "Inicio de sesión exitoso",
+            token: token
+         });
 
-    }
+    }catch(error) {
+        res.status(500).json({ error: "Error en el servidor " });
+    }   
+
 };

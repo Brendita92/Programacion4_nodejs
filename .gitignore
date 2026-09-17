@@ -1,3 +1,38 @@
-*node_modules
-*.env
 *sorteo.routes.js
+
+# Dependencias
+node_modules/
+
+# Variables de entorno
+.env
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+*.log
+
+# Archivos temporales
+*.tmp
+*.swp
+*.swo
+
+# Configuración de IDEs
+.vscode/
+.idea/
+
+# Archivos del sistema
+.DS_Store
+Thumbs.db
+
+# Coverage y testing
+coverage/
+*.lcov
+
+# Builds y distribuciones
+dist/
+build/
+
+# Archivos de cache
+.cache/
+
