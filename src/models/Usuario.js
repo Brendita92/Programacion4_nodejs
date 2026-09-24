@@ -23,16 +23,15 @@ const usuarioSchema = new mongoose.Schema({
 });
 
 usuarioSchema.pre('save', async function() {
-
     if (!this.isModified('password')) return;
-
     const salt = await bcrypt.genSalt(10);
-
     this.password = await bcrypt.hash(this.password, salt);
 });
 
-usuarioSchema.methods.compararPassword = async function(passwordIgresado) {
-    return await bcrypt.compare(passwordIgresado, this.password);
+
+
+usuarioSchema.methods.compararPassword = async function(passwordIngresado) {
+    return await bcrypt.compare(passwordIngresado, this.password);
 };
 
 
