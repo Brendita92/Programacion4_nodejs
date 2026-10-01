@@ -7,8 +7,11 @@ import 'dotenv/config';
 import { limitadorGlobal } from './src/middlewares/rateLimit.middleware.js';
 import authRoutes from './src/routes/auth.routes.js'
 import proveedoresRoutes from './src/routes/proveedores.routes.js';
+import climaRoutes from './src/routes/externo.routes.js';
 import productosRoutes from './src/routes/productos.routes.js';
 import usuariosRoutes from './src/routes/usuarios.routes.js';
+import swapiRoutes from './src/routes/swapi.routes.js'
+import iaRoutes from './src/routes/ia.routes.js'
 
 
 const app = express();
@@ -38,12 +41,17 @@ app.use(morgan('dev'));
 app.use(limitadorGlobal); //aplica el limitador global a todas las rutas
 app.use(express.json());
 
+
 const PORT = process.env.PORT || 3000;
 
 app.use('/api/auth', authRoutes);
 app.use('/api/proveedores', proveedoresRoutes);
 app.use('/api/productos', productosRoutes);
 app.use( '/api/usuarios', usuariosRoutes); //ruta para usuarios
+app.use('/api/clima', climaRoutes); //ruta para obtener el clima;
+app.use('/api/externa/starwars', swapiRoutes)
+app.use('/api/ia', iaRoutes);
+
 try {
     await conectarDB();
     app.listen(PORT, () => {
