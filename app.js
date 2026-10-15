@@ -1,3 +1,6 @@
+import { createServer } from 'http';
+import { Server } from 'socket.io';
+import { initFirebaseListener } from './src/services/firebaseListener.js';
 import express from 'express';
 import helmet from 'helmet';
 import morgan from 'morgan';
@@ -15,6 +18,7 @@ import iaRoutes from './src/routes/ia.routes.js'
 
 
 const app = express();
+
 
 
 //Middlewares globales
@@ -44,6 +48,7 @@ app.use(express.json());
 
 const PORT = process.env.PORT || 3000;
 
+
 app.use('/api/auth', authRoutes);
 app.use('/api/proveedores', proveedoresRoutes);
 app.use('/api/productos', productosRoutes);
@@ -52,10 +57,34 @@ app.use('/api/clima', climaRoutes); //ruta para obtener el clima;
 app.use('/api/externa/starwars', swapiRoutes)
 app.use('/api/ia', iaRoutes);
 
+const httpServer = createServer(app);
+
+export const io = new Server(httpServer, {
+    cors: { origin: '*' }
+});
+
+io.on('connection', (socket) => {
+    console.log(` Nuevo cliente conectado al WebSocket , ID: ${socket.id}`);
+
+socket.on('aviso_frontend', (data) => {
+    console.log("Mensaje del frontend:", data);
+
+    io.emit('notificacion_global', {
+         mensaje: 'Alguien hizo click' 
+    });
+ });
+
+    socket.on('disconnect', () => {
+        console.log(` Cliente desconectado del WebSocket, ID: ${socket.id}`);
+    })          
+});
+
+initFirebaseListener(); // Inicializar el listener de Firebase
+
 try {
     await conectarDB();
-    app.listen(PORT, () => {
-        console.log(`Servidor Express listo en http://localhost:${PORT}`);
+    httpServer.listen(PORT, () => {
+        console.log(`Servidor Express  y WebSockets listos en http://localhost:${PORT}`);
     });
 } catch (error) {
     process.exitCode = 1;

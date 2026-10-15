@@ -36,3 +36,4 @@ build/
 # Archivos de cache
 .cache/
 
+Firebase-key.json
